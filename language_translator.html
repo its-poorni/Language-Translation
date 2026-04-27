@@ -1,0 +1,570 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .tl-wrap {
+    font-family: 'Sora', sans-serif;
+    padding: 1.5rem 1rem 2rem;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .tl-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .tl-globe {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--color-background-info);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .tl-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    letter-spacing: -0.3px;
+  }
+
+  .tl-subtitle {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+  }
+
+  .tl-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .lang-select {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+
+  .lang-select:focus { outline: none; border-color: var(--color-border-info); }
+
+  .swap-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    transition: transform 0.3s;
+  }
+  .swap-btn:hover { background: var(--color-background-tertiary); transform: rotate(180deg); }
+
+  .tl-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 500px) {
+    .tl-panels { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    padding: 8px 12px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  .panel textarea {
+    flex: 1;
+    width: 100%;
+    min-height: 140px;
+    padding: 8px 12px 12px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-primary);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+  }
+  .panel textarea:focus { outline: none; }
+  .panel textarea::placeholder { color: var(--color-text-tertiary); }
+
+  .panel-result {
+    flex: 1;
+    min-height: 140px;
+    padding: 8px 12px 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+    position: relative;
+  }
+
+  .result-text {
+    color: var(--color-text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .result-placeholder {
+    color: var(--color-text-tertiary);
+    font-size: 14px;
+  }
+
+  .panel-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px 8px;
+    border-top: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .char-count {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+  }
+
+  .icon-btn {
+    width: 28px; height: 28px;
+    border-radius: var(--border-radius-md);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    transition: background 0.15s;
+  }
+  .icon-btn:hover { background: var(--color-background-secondary); }
+
+  .tl-translate-btn {
+    width: 100%;
+    padding: 11px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .tl-translate-btn:hover { background: var(--color-background-secondary); }
+  .tl-translate-btn:active { transform: scale(0.99); }
+  .tl-translate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid var(--color-border-secondary);
+    border-top-color: var(--color-text-primary);
+    border-radius: 50%;
+    display: none;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .tl-history {
+    border-top: 0.5px solid var(--color-border-tertiary);
+    padding-top: 1rem;
+  }
+
+  .history-header {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+  }
+
+  .history-item {
+    padding: 8px 12px;
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-secondary);
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .history-item:hover { background: var(--color-background-tertiary); }
+
+  .history-langs {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .history-preview {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tl-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+
+  .quick-chip {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .quick-chip:hover { background: var(--color-background-tertiary); color: var(--color-text-primary); }
+
+  .toast {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: var(--color-background-success);
+    color: var(--color-text-success);
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: var(--border-radius-md);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+</style>
+
+<div class="tl-wrap">
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Language Translator powered by Claude AI</h2>
+
+  <div class="tl-header">
+    <div class="tl-globe">🌐</div>
+    <div>
+      <div class="tl-title">Translator</div>
+      <div class="tl-subtitle">Powered by Claude AI</div>
+    </div>
+  </div>
+
+  <div class="tl-controls">
+    <select class="lang-select" id="sourceLang">
+      <option value="auto">Detect language</option>
+      <option value="English">English</option>
+      <option value="Spanish">Spanish</option>
+      <option value="French">French</option>
+      <option value="German">German</option>
+      <option value="Italian">Italian</option>
+      <option value="Portuguese">Portuguese</option>
+      <option value="Dutch">Dutch</option>
+      <option value="Russian">Russian</option>
+      <option value="Chinese (Simplified)">Chinese (Simplified)</option>
+      <option value="Chinese (Traditional)">Chinese (Traditional)</option>
+      <option value="Japanese">Japanese</option>
+      <option value="Korean">Korean</option>
+      <option value="Arabic">Arabic</option>
+      <option value="Hindi">Hindi</option>
+      <option value="Telugu">Telugu</option>
+      <option value="Tamil">Tamil</option>
+      <option value="Bengali">Bengali</option>
+      <option value="Turkish">Turkish</option>
+      <option value="Polish">Polish</option>
+      <option value="Swedish">Swedish</option>
+      <option value="Norwegian">Norwegian</option>
+      <option value="Danish">Danish</option>
+      <option value="Finnish">Finnish</option>
+      <option value="Greek">Greek</option>
+      <option value="Hebrew">Hebrew</option>
+      <option value="Thai">Thai</option>
+      <option value="Vietnamese">Vietnamese</option>
+      <option value="Indonesian">Indonesian</option>
+      <option value="Malay">Malay</option>
+      <option value="Swahili">Swahili</option>
+      <option value="Urdu">Urdu</option>
+    </select>
+
+    <button class="swap-btn" id="swapBtn" title="Swap languages">⇄</button>
+
+    <select class="lang-select" id="targetLang">
+      <option value="Spanish">Spanish</option>
+      <option value="English">English</option>
+      <option value="French">French</option>
+      <option value="German">German</option>
+      <option value="Italian">Italian</option>
+      <option value="Portuguese">Portuguese</option>
+      <option value="Dutch">Dutch</option>
+      <option value="Russian">Russian</option>
+      <option value="Chinese (Simplified)">Chinese (Simplified)</option>
+      <option value="Chinese (Traditional)">Chinese (Traditional)</option>
+      <option value="Japanese">Japanese</option>
+      <option value="Korean">Korean</option>
+      <option value="Arabic">Arabic</option>
+      <option value="Hindi">Hindi</option>
+      <option value="Telugu">Telugu</option>
+      <option value="Tamil">Tamil</option>
+      <option value="Bengali">Bengali</option>
+      <option value="Turkish">Turkish</option>
+      <option value="Polish">Polish</option>
+      <option value="Swedish">Swedish</option>
+      <option value="Norwegian">Norwegian</option>
+      <option value="Danish">Danish</option>
+      <option value="Finnish">Finnish</option>
+      <option value="Greek">Greek</option>
+      <option value="Hebrew">Hebrew</option>
+      <option value="Thai">Thai</option>
+      <option value="Vietnamese">Vietnamese</option>
+      <option value="Indonesian">Indonesian</option>
+      <option value="Malay">Malay</option>
+      <option value="Swahili">Swahili</option>
+      <option value="Urdu">Urdu</option>
+    </select>
+  </div>
+
+  <div class="tl-quick">
+    <span style="font-size:11px;color:var(--color-text-tertiary);align-self:center;margin-right:2px;">Try:</span>
+    <button class="quick-chip" onclick="setInput('Hello, how are you?')">Hello, how are you?</button>
+    <button class="quick-chip" onclick="setInput('Where is the nearest hospital?')">Where is the nearest hospital?</button>
+    <button class="quick-chip" onclick="setInput('I love learning new languages.')">I love languages</button>
+    <button class="quick-chip" onclick="setInput('The food here is delicious!')">The food is delicious!</button>
+  </div>
+
+  <div class="tl-panels">
+    <div class="panel">
+      <div class="panel-label">Source text</div>
+      <textarea id="sourceText" placeholder="Type or paste text here…" maxlength="3000"></textarea>
+      <div class="panel-footer">
+        <span class="char-count" id="charCount">0 / 3000</span>
+        <button class="icon-btn" onclick="clearInput()" title="Clear">✕</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Translation</div>
+      <div class="panel-result" id="resultBox">
+        <span class="result-placeholder" id="resultPlaceholder">Translation will appear here…</span>
+        <span class="result-text" id="resultText" style="display:none;"></span>
+        <div class="toast" id="toast">Copied!</div>
+      </div>
+      <div class="panel-footer">
+        <span class="char-count" id="detectedLang"></span>
+        <div style="display:flex;gap:4px;">
+          <button class="icon-btn" onclick="copyResult()" title="Copy" id="copyBtn" style="display:none;">⎘</button>
+          <button class="icon-btn" onclick="speakResult()" title="Listen" id="speakBtn" style="display:none;">♪</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="tl-translate-btn" id="translateBtn" onclick="doTranslate()">
+    <div class="spinner" id="spinner"></div>
+    <span id="btnLabel">Translate</span>
+  </button>
+
+  <div class="tl-history" id="historySection" style="display:none;">
+    <div class="history-header">Recent</div>
+    <div id="historyList"></div>
+  </div>
+</div>
+
+<script>
+const history = [];
+
+function setInput(text) {
+  document.getElementById('sourceText').value = text;
+  updateCharCount();
+}
+
+function clearInput() {
+  document.getElementById('sourceText').value = '';
+  document.getElementById('resultText').style.display = 'none';
+  document.getElementById('resultPlaceholder').style.display = '';
+  document.getElementById('charCount').textContent = '0 / 3000';
+  document.getElementById('detectedLang').textContent = '';
+  document.getElementById('copyBtn').style.display = 'none';
+  document.getElementById('speakBtn').style.display = 'none';
+}
+
+document.getElementById('sourceText').addEventListener('input', updateCharCount);
+document.getElementById('sourceText').addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') doTranslate();
+});
+
+function updateCharCount() {
+  const len = document.getElementById('sourceText').value.length;
+  document.getElementById('charCount').textContent = `${len} / 3000`;
+}
+
+document.getElementById('swapBtn').addEventListener('click', () => {
+  const sl = document.getElementById('sourceLang');
+  const tl = document.getElementById('targetLang');
+  const cur = document.getElementById('resultText').textContent;
+  const src = document.getElementById('sourceText').value;
+
+  if (sl.value !== 'auto') {
+    const sv = sl.value, tv = tl.value;
+    [...sl.options].forEach(o => { if (o.value === tv) sl.value = tv; });
+    [...tl.options].forEach(o => { if (o.value === sv) tl.value = sv; });
+  }
+
+  if (cur && src) {
+    document.getElementById('sourceText').value = cur;
+    updateCharCount();
+  }
+});
+
+async function doTranslate() {
+  const text = document.getElementById('sourceText').value.trim();
+  if (!text) return;
+
+  const src = document.getElementById('sourceLang').value;
+  const tgt = document.getElementById('targetLang').value;
+
+  const btn = document.getElementById('translateBtn');
+  const spinner = document.getElementById('spinner');
+  const label = document.getElementById('btnLabel');
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  label.textContent = 'Translating…';
+
+  document.getElementById('resultPlaceholder').style.display = '';
+  document.getElementById('resultText').style.display = 'none';
+  document.getElementById('detectedLang').textContent = '';
+  document.getElementById('copyBtn').style.display = 'none';
+  document.getElementById('speakBtn').style.display = 'none';
+
+  const sourceLang = src === 'auto' ? 'the detected source language' : src;
+  const prompt = `Translate the following text from ${sourceLang} to ${tgt}. ${src === 'auto' ? 'First detect the language.' : ''}
+
+Return ONLY a JSON object with exactly these fields, no other text:
+{"translation": "...", "detectedLang": "..." }
+
+If the source language is specified (not auto-detect), set detectedLang to "${src}".
+
+Text to translate:
+${text}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content.map(b => b.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    const resultEl = document.getElementById('resultText');
+    resultEl.textContent = parsed.translation;
+    resultEl.style.display = '';
+    document.getElementById('resultPlaceholder').style.display = 'none';
+    document.getElementById('copyBtn').style.display = '';
+    document.getElementById('speakBtn').style.display = '';
+
+    if (src === 'auto' && parsed.detectedLang) {
+      document.getElementById('detectedLang').textContent = `Detected: ${parsed.detectedLang}`;
+    }
+
+    history.unshift({ src: parsed.detectedLang || src, tgt, original: text, translation: parsed.translation });
+    if (history.length > 5) history.pop();
+    renderHistory();
+
+  } catch (err) {
+    document.getElementById('resultText').textContent = 'Translation failed. Please try again.';
+    document.getElementById('resultText').style.display = '';
+    document.getElementById('resultPlaceholder').style.display = 'none';
+  }
+
+  btn.disabled = false;
+  spinner.style.display = 'none';
+  label.textContent = 'Translate';
+}
+
+function copyResult() {
+  const text = document.getElementById('resultText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1800);
+  });
+}
+
+function speakResult() {
+  const text = document.getElementById('resultText').textContent;
+  if (!text) return;
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = document.getElementById('targetLang').value;
+  window.speechSynthesis.speak(utt);
+}
+
+function renderHistory() {
+  const section = document.getElementById('historySection');
+  const list = document.getElementById('historyList');
+  if (history.length === 0) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  list.innerHTML = history.map((h, i) => `
+    <div class="history-item" onclick="loadHistory(${i})">
+      <div class="history-langs">${h.src} → ${h.tgt}</div>
+      <div class="history-preview">${h.original.substring(0, 60)}${h.original.length > 60 ? '…' : ''}</div>
+    </div>
+  `).join('');
+}
+
+function loadHistory(i) {
+  const h = history[i];
+  document.getElementById('sourceText').value = h.original;
+  updateCharCount();
+  const tl = document.getElementById('targetLang');
+  [...tl.options].forEach(o => { if (o.value === h.tgt) tl.value = h.tgt; });
+  const resultEl = document.getElementById('resultText');
+  resultEl.textContent = h.translation;
+  resultEl.style.display = '';
+  document.getElementById('resultPlaceholder').style.display = 'none';
+  document.getElementById('copyBtn').style.display = '';
+  document.getElementById('speakBtn').style.display = '';
+}
+</script>
